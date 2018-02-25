@@ -56,7 +56,11 @@
     <Compile Include="GameWind.Designer.cs">
       <DependentUpon>GameWind.cs</DependentUpon>
     </Compile>
-    <Compile Include="GEngine.cs" />
+    <Compile Include="GraphicEngine.cs" />
+    <Compile Include="Levels\Level.cs" />
+    <Compile Include="Levels\Level2.cs" />
+    <Compile Include="Levels\Level1.cs" />
+    <Compile Include="Models\Dragon.cs" />
     <Compile Include="Models\Mario.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Mushroom.cs" />
@@ -150,6 +154,27 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\atack3.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario_prepare2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario_stay2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario_action2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mushroom.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\princes.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\back2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dragon.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

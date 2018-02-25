@@ -28,7 +28,6 @@ namespace WindowsFormsApp1
 
         private void canvas_FormClosing(object sender, FormClosingEventArgs e)
         {
-            game.stopGame();
         }
 
         private void canvas_KeyDown(object sender, KeyEventArgs e)

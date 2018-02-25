@@ -1,4 +1,3 @@
-D:\Programming\Lucrari de laborator\APPOO\APPOO\WindowsFormsApp1\obj\Debug\APPOO.csprojResolveAssemblyReference.cache
 D:\Programming\Lucrari de laborator\APPOO\APPOO\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.canvas.resources
 D:\Programming\Lucrari de laborator\APPOO\APPOO\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.Properties.Resources.resources
 D:\Programming\Lucrari de laborator\APPOO\APPOO\WindowsFormsApp1\obj\Debug\APPOO.csproj.GenerateResource.Cache
@@ -9,3 +8,5 @@ D:\Programming\Lucrari de laborator\APPOO\APPOO\WindowsFormsApp1\bin\Debug\Windo
 D:\Programming\Lucrari de laborator\APPOO\APPOO\WindowsFormsApp1\bin\Debug\WindowsFormsApp1.pdb
 D:\Programming\Lucrari de laborator\APPOO\APPOO\WindowsFormsApp1\bin\Debug\Newtonsoft.Json.dll
 D:\Programming\Lucrari de laborator\APPOO\APPOO\WindowsFormsApp1\bin\Debug\Newtonsoft.Json.xml
+D:\Programming\Lucrari de laborator\APPOO\APPOO\WindowsFormsApp1\obj\Debug\APPOO.csproj.CoreCompileInputs.cache
+D:\Programming\Lucrari de laborator\APPOO\APPOO\WindowsFormsApp1\obj\Debug\APPOO.csprojResolveAssemblyReference.cache

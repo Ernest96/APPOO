@@ -10,16 +10,29 @@ namespace WindowsFormsApp1.Models
 {
     class NPC : Model
     {
-        protected Bitmap explodeImg;
         protected int explosionX;
         protected int explosionY;
         protected bool isShowing;
+        protected int scoreHit;
+        protected Game game;
 
-        public NPC()
+        public virtual void Hide()
         {
-            explodeImg = Properties.Resources.explode;
-            explosionX = Environment.ExplosionX;
-            explosionY = Environment.ExplosionY;
+            isShowing = false;
+            Debug.WriteLine("NPC is hiding");
+        }
+
+        public virtual void Show()
+        {
+            isShowing = true;
+            Debug.WriteLine("NPC is showing");
+        }
+
+        public NPC(Game game)
+        {
+            this.game = game;
+            explosionX = Environment.Explosion1X;
+            explosionY = Environment.Explosion1Y;
         }
 
         override public void Draw(Graphics g)
@@ -27,30 +40,14 @@ namespace WindowsFormsApp1.Models
             g.DrawImage(img, x, y);
         }
 
-        public void Hide()
-        {
-            isShowing = false;
-            Debug.WriteLine("NPC is hiding");
-        }
-
-        public void Show()
-        {
-            isShowing = true;
-            Debug.WriteLine("NPC is showing");
-        }
-
-        public void DrawExplosion(Graphics g, bool explode)
-        {
-            if (explode)
-            {
-                g.DrawImage(explodeImg, explosionX, explosionY);
-            }
-        }
-
         public bool IsPresent()
         {
             return isShowing;
         }
 
+        public virtual void isAtacked()
+        {
+            Debug.WriteLine("npc is atacked");
+        }
     }
 }

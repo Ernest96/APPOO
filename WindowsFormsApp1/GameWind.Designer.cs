@@ -45,7 +45,6 @@
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.canvas_Paint);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.canvas_KeyDown);
             this.ResumeLayout(false);
-
         }
 
         #endregion

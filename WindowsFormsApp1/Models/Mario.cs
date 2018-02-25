@@ -14,20 +14,21 @@ namespace WindowsFormsApp1.Models
         private  Bitmap prepareImg;
         private Bitmap atackImg;
         private Bitmap stayImg;
-
-        public Mario()
-        {
-            x = Environment.MarioX;
-            y = Environment.MarioY;
-            img = Properties.Resources.mario_stay;
-            prepareImg = Properties.Resources.mario_prep;
-            atackImg = Properties.Resources.mario_action;
-            stayImg = Properties.Resources.mario_stay;
-        }
+        private Game game;
 
         override public void Draw(Graphics g)
         {
             g.DrawImage(img, x, y);
+        }
+
+        public Mario(Game game)
+        {
+            x = game.currentLevel.marioX;
+            y = game.currentLevel.marioY;
+            img = Properties.Resources.mario_stay;
+            prepareImg = Properties.Resources.mario_prep;
+            atackImg = Properties.Resources.mario_action;
+            stayImg = Properties.Resources.mario_stay;
         }
 
         public void Atack()

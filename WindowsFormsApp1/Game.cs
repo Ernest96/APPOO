@@ -8,87 +8,145 @@ using WindowsFormsApp1.Models;
 using System.IO;
 using Newtonsoft.Json;
 using System.Threading;
+using WindowsFormsApp1.Levels;
 
 namespace WindowsFormsApp1
 {
     class Game
     {
-        private GEngine gEngine;
+        private GraphicEngine graphicEngine;
         private Mario mario;
-        private NPC npc = new Princess();
-        private Thread fileThread;
-        public int score { get; private set; }
+        private NPC npc;
+        public int score { get; set; }
         public int bestScore { get; private set; }
         public bool keyIsPressed = false;
         private bool isExplode = false;
+        public Level currentLevel;
+        public int levelIndex { get; private set; }
+        private List<Level> Levels;
 
         public Game()
         {
-            fileThread = new Thread(new ThreadStart(getScore));
-            fileThread.Start();
-        }
-
-        private void getScore()
-        {
-            using (StreamReader file = File.OpenText(Environment.json))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                bestScore = (int)serializer.Deserialize(file, typeof(int));
-            }
-            fileThread.Abort();
-        }
-
-        private void setBestScore()
-        {
-            using (StreamWriter writetext = new StreamWriter(Environment.json))
-            {
-                writetext.Write(bestScore.ToString());
-            }
-            fileThread.Abort();
-
+            Levels = new List<Level>();
+            Levels.Add(new Level1(this));
+            Levels.Add(new Level2(this));
+            levelIndex = 0;
+            currentLevel = Levels.ElementAt(levelIndex);
+            mario = new Mario(this);
+            npc = new NPC(this);
+            Task.Run(() => getScore());
+            Task.Run(() => logic());
+            Task.Run(() => generate());
         }
 
         public void startGraphics(Graphics g)
         {
-            gEngine = new GEngine(g, this);
-            mario = new Mario();
-            gEngine.init();
+            graphicEngine = new GraphicEngine(g, this);
+        }
+
+        public void ChangeLevel()
+        {
+            if (levelIndex < Levels.Count - 1)
+                levelIndex++;
+
+            currentLevel = Levels.ElementAt(levelIndex);
+            isExplode = false;
+            mario = new Mario(this);
+        }
+
+        private void generate()
+        {
+            long startTime = System.Environment.TickCount;
+            long nextTime = 800;
+            long stayTime = 900;
+
+            while (true)
+            {
+                if (System.Environment.TickCount >= startTime + nextTime && !npc.IsPresent())
+                {
+                    ShowNpc();
+                    startTime = System.Environment.TickCount;
+                    Random random = new Random();
+                    nextTime = random.Next(700, 3500);
+                }
+                if (System.Environment.TickCount >= startTime + stayTime && npc.IsPresent())
+                {
+                    HideNpc();
+                    startTime = System.Environment.TickCount;
+                    Random random = new Random();
+                    stayTime = random.Next(820, 1400);
+                }
+            }
+        }
+
+        private void logic()
+        {
+            long startTime = System.Environment.TickCount;
+
+            while (true)
+            {
+                if (keyIsPressed)
+                {
+                    mario.Prepare();
+                    startTime = System.Environment.TickCount;
+                    keyIsPressed = false;
+                }
+
+                if (System.Environment.TickCount >= startTime + 450)
+                {
+                    if (mario.isPreparing)
+                    {
+                        mario.Atack();
+                        if (npc.IsPresent())
+                        {
+                            AtackNpc();
+                            HideNpc();
+                        }
+                        startTime = System.Environment.TickCount;
+                    }
+                    else if (mario.isAtacking)
+                    {
+                        isExplode = false;
+                        this.mario.Stay();
+                        startTime = System.Environment.TickCount;
+                    }
+                }
+            }
+        }
+
+        public void ShowNpc()
+        {
+            npc = currentLevel.ChooseNpc();
+            npc.Show();
+        }
+
+        public void HideNpc()
+        {
+            npc.Hide();
+        }
+
+        public void AtackNpc()
+        {
+            isExplode = true;
+
+            npc.isAtacked();
+
+            if (score > bestScore)
+            {
+                bestScore = score;
+                Task.Run(() => setBestScore());
+            }
+
+            if (score >= currentLevel.passPoints)
+            {
+                ChangeLevel();
+            }
+
         }
 
         public void DrawMario(Graphics g)
         {
             mario.Draw(g);
-        }
-
-        public bool MarioIsPreparing()
-        {
-            return mario.isPreparing;
-        }
-
-        public bool MarioIsAtacking()
-        {
-            return mario.isAtacking;
-        }
-
-        public void PrepareMario()
-        {
-            this.mario.Prepare();
-        }
-
-        public void MarioAtack()
-        {
-            this.mario.Atack();
-        }
-
-        public void MarioStay()
-        {
-            isExplode = false;
-            this.mario.Stay();
-        }
-
-        public void stopGame()
-        {
-            gEngine.stop();
         }
 
         public void DrawNpc(Graphics g)
@@ -99,53 +157,33 @@ namespace WindowsFormsApp1
             }
         }
 
-        public bool NpcIsPresent()
-        {
-            return npc.IsPresent();
-        }
-
         public void DrawExplosion(Graphics g)
         {
-            npc.DrawExplosion(g, isExplode);
-        }
-
-        public void ShowNpc()
-        {
-            npc.Show();
-        }
-
-        public void HideNpc()
-        {
-            npc.Hide();
-            Random random = new Random();
-            var r = random.Next(1, 100);
-
-            if (r >= 75)
-                npc = new Princess();
-            else
-                npc = new Mushroom();
-        }
-
-        
-
-        public void AtackNpc()
-        {
-            isExplode = true;
-            if (npc is Mushroom)
+            if (isExplode)
             {
-                score = score + 2;
+                g.DrawImage(currentLevel.explodeImg, currentLevel.explosionX, currentLevel.explosionY);
+            }
+        }
 
-                if (score > bestScore)
+        private void getScore()
+        {
+            if (File.Exists(Environment.json))
+            {
+                using (StreamReader file = File.OpenText(Environment.json))
                 {
-                    bestScore = score;
-                    fileThread = new Thread(new ThreadStart(setBestScore));
-                    fileThread.Start();
+                    JsonSerializer serializer = new JsonSerializer();
+                    bestScore = (int)serializer.Deserialize(file, typeof(int));
                 }
             }
-            else if(npc is Princess)
+        }
+
+        private void setBestScore()
+        {
+            using (StreamWriter writetext = new StreamWriter(Environment.json))
             {
-                score = score - 10;
+                writetext.Write(bestScore.ToString());
             }
+
         }
     }
 }
