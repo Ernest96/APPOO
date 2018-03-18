@@ -92,6 +92,16 @@ namespace WindowsFormsApp1.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap back3 {
+            get {
+                object obj = ResourceManager.GetObject("back3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap dragon {
             get {
                 object obj = ResourceManager.GetObject("dragon", resourceCulture);
@@ -110,11 +120,40 @@ namespace WindowsFormsApp1.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream jump {
+            get {
+                return ResourceManager.GetStream("jump", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap mario_action {
             get {
                 object obj = ResourceManager.GetObject("mario_action", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap mario_atacked {
+            get {
+                object obj = ResourceManager.GetObject("mario_atacked", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap mario_jump {
+            get {
+                object obj = ResourceManager.GetObject("mario_jump", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -165,6 +204,15 @@ namespace WindowsFormsApp1.Properties {
             get {
                 object obj = ResourceManager.GetObject("princess_prepare", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream stomp {
+            get {
+                return ResourceManager.GetStream("stomp", resourceCulture);
             }
         }
     }

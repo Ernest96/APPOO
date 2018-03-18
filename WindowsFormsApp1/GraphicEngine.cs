@@ -10,15 +10,15 @@ using System.Diagnostics;
 namespace WindowsFormsApp1
 {
     class GraphicEngine
-    {
+    { 
+        // clasa pentru desenarea elementelor grafice
+
         private Graphics drawHandle;
         private Thread renderThread;
-        private Game game;
 
-        public GraphicEngine(Graphics g, Game game)
+        public GraphicEngine(Graphics g)
         {
             drawHandle = g;
-            this.game = game;
             renderThread = new Thread(new ThreadStart(render));
             renderThread.Start();
         }
@@ -30,26 +30,23 @@ namespace WindowsFormsApp1
 
             while (true)
             {
-                Bitmap back = game.currentLevel.background;
-                temp.DrawImage(back, 0, 0);
-                temp.DrawString("Score = " + game.score,
+                Game.Instance.currentLevel.DrawLevel(temp);
+
+                temp.DrawString("Score = " + Game.Instance.score,
                                 new System.Drawing.Font("Arial", 14),
                                 new System.Drawing.SolidBrush(System.Drawing.Color.Black),
                                 5, 26
                                 );
-                temp.DrawString("Best Score = " + game.bestScore,
+                temp.DrawString("Best Score = " + Game.Instance.bestScore,
                                 new System.Drawing.Font("Arial", 14),
                                 new System.Drawing.SolidBrush(System.Drawing.Color.Black),
                                 5, 5
                                 );
-                temp.DrawString("Level = " + (game.levelIndex + 1),
+                temp.DrawString("Level = " + (Game.Instance.levelIndex + 1),
                                new System.Drawing.Font("Arial", 14),
                                new System.Drawing.SolidBrush(System.Drawing.Color.Black),
-                               580, 5
+                               560, 5
                                );
-                game.DrawNpc(temp);
-                game.DrawMario(temp);
-                game.DrawExplosion(temp);
 
                 drawHandle.DrawImage(frame, 0, 0);
             }

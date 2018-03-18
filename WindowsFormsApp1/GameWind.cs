@@ -11,10 +11,11 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApp1
 {
+
+    //fereastra aplicatiei (forma)
+
     public partial class canvas : Form
     {
-        private Game game = new Game();
-
         public canvas()
         {
             InitializeComponent();
@@ -23,7 +24,8 @@ namespace WindowsFormsApp1
         private void canvas_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = CreateGraphics();
-            game.startGraphics(g);
+            var a = Game.Instance;
+            Game.Instance.startGraphics(g);
         }
 
         private void canvas_FormClosing(object sender, FormClosingEventArgs e)
@@ -34,7 +36,7 @@ namespace WindowsFormsApp1
         {
             if (e.KeyCode == Keys.Space)
             {
-                game.keyIsPressed = true;
+                Game.Instance.keyIsPressed = true;
             }
         }
     }

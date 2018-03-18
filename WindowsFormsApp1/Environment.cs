@@ -2,10 +2,10 @@
 
 namespace WindowsFormsApp1
 {
+    // setarile jocului
+
     class Environment
     {
-        public static readonly string atackSound = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Resources\atack3.wav";
-        public static readonly string prepareSound = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Resources\prepare.wav";
         public static readonly string json = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Resources\best.json";
         public const int width = 668;
         public const int height = 297;
@@ -17,8 +17,8 @@ namespace WindowsFormsApp1
         public const int Mushroom1Y = 246;
         public const int Princess1X = 404;
         public const int Princess1Y = 235;
-        public const int Explosion1X = 390;
-        public const int Explosion1Y = 223;
+        public const int Explosion1X = 384;
+        public const int Explosion1Y = 213;
 
         //LEVEL 2
         public const int Mario2X = 134;
@@ -29,7 +29,13 @@ namespace WindowsFormsApp1
         public const int Princess2Y = 222;
         public const int Dragon2X = 256;
         public const int Dragon2Y = 222;
-        public const int Explosion2X = 244;
-        public const int Explosion2Y = 212;
+        public const int Explosion2X = 234;
+        public const int Explosion2Y = 202;
+
+        //LEVEL 3
+        public const int Mario3X = 130;
+        public const int Mario3Y = 159;
+        public const int Dragon3X = 740;
+        public const int Dragon3Y = 222;
     }
 }

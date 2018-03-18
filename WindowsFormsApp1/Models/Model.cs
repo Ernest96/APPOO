@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 
 namespace WindowsFormsApp1.Models
 {
-    abstract class Model
+    public abstract class Model
     {
-        protected int x;
-        protected int y;
         protected Bitmap img;
+        public Rectangle rect;
 
         abstract public void Draw(Graphics g);
     }

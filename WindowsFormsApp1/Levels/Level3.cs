@@ -9,37 +9,20 @@ using WindowsFormsApp1.Models;
 
 namespace WindowsFormsApp1.Levels
 {
-
-    // nivelul 2
-
-    class Level2 : Level
+    class Level3 : Level
     {
+        private bool escaped = true;
 
-        public Level2() :
-            base(Environment.Explosion2X, Environment.Explosion2Y, Environment.Mario2X, Environment.Mario2Y)
+        public Level3() :
+            base(Environment.Explosion1X, Environment.Explosion1Y, Environment.Mario3X, Environment.Mario3Y)
         {
             logicToken = new CancellationTokenSource();
             generateToken = new CancellationTokenSource();
-            background = Properties.Resources.back2;
-            passPoints = 4;
-            NPCS.Add(new Princess(Environment.Princess2X, Environment.Princess2Y));
-            NPCS.Add(new Mushroom(Environment.Mushroom2X, Environment.Mushroom2Y));
-            NPCS.Add(new Dragon(Environment.Dragon2X, Environment.Dragon2Y));
+            background = Properties.Resources.back3;
+            passPoints = 4000;
         }
 
-        public override NPC ChooseNpc()
-        {
-            Random random = new Random();
-            var r = random.Next(1, 100);
-
-            if (r >= 65)
-                return NPCS.ElementAt(0);
-            else if (r >=25)
-                return NPCS.ElementAt(1);
-            else
-                return NPCS.ElementAt(2);
-        }
-
+        //interface DRAWABLE
         public override void DrawLevel(Graphics g)
         {
             Bitmap back = Game.Instance.currentLevel.background;
@@ -55,6 +38,11 @@ namespace WindowsFormsApp1.Levels
             }
         }
 
+        public override NPC ChooseNpc()
+        {
+            return new Dragon(Environment.Dragon3X, Environment.Dragon3Y);
+        }
+
         protected override void Logic()
         {
             CancellationToken ct = logicToken.Token;
@@ -67,34 +55,34 @@ namespace WindowsFormsApp1.Levels
                 {
                     if (logicToken.IsCancellationRequested)
                     {
+                        Console.WriteLine("task canceled");
                         break;
                     }
 
-                    if (Game.Instance.keyIsPressed)
+                    if (Game.Instance.keyIsPressed && !Game.Instance.mario.isJumping)
                     {
-                        Game.Instance.mario.Prepare();
+                        Game.Instance.mario.Jump(70);
                         startTime = System.Environment.TickCount;
                         Game.Instance.keyIsPressed = false;
                     }
 
-                    if (System.Environment.TickCount >= startTime + 450)
+                    if (System.Environment.TickCount >= startTime + 350)
                     {
-                        if (Game.Instance.mario.isPreparing)
+                        if (Game.Instance.mario.isJumping)
                         {
-                            Game.Instance.mario.Atack();
-                            if (Game.Instance.npc.IsPresent())
-                            {
-                                Game.Instance.AtackNpc();
-                                Game.Instance.HideNpc();
-                            }
-                            startTime = System.Environment.TickCount;
+                            Game.Instance.mario.Fall();
                         }
-                        else if (Game.Instance.mario.isAtacking)
+                        else if (Game.Instance.mario.isAtacked)
                         {
-                            Game.Instance.isExplode = false;
-                            Game.Instance.mario.Stay();
-                            startTime = System.Environment.TickCount;
+                            Game.Instance.mario.Fall();
                         }
+                    }
+
+                    if (Game.Instance.npc.rect.IntersectsWith(Game.Instance.mario.rect) && !Game.Instance.mario.isAtacked)
+                    {
+                        escaped = false;
+                        Game.Instance.mario.Atacked();
+                        Thread.Sleep(500);
                     }
                 }
             }, ct);
@@ -104,9 +92,11 @@ namespace WindowsFormsApp1.Levels
         {
             CancellationToken ct = generateToken.Token;
             long startTime = System.Environment.TickCount;
-            long nextTime = 800;
-            long stayTime = 900;
+            long moveTime = 40;
             Thread.Sleep(100);
+
+            Game.Instance.npc = ChooseNpc();
+            Game.Instance.npc.Show();
 
             Task.Factory.StartNew(() =>
             {
@@ -114,23 +104,29 @@ namespace WindowsFormsApp1.Levels
                 {
                     if (generateToken.IsCancellationRequested)
                     {
+                        Console.WriteLine("task canceled");
                         break;
                     }
 
-                    if (System.Environment.TickCount >= startTime + nextTime && !Game.Instance.npc.IsPresent())
+                    if (System.Environment.TickCount >= startTime + moveTime)
                     {
+                        Game.Instance.npc.rect.X -= 30;
+                        startTime = System.Environment.TickCount;
+                    }
+                    if (Game.Instance.npc.rect.Right < 0)
+                    {
+                        if (escaped == true)
+                        {
+                            Game.Instance.EscapeNpc();
+                        }
+
+                        int nextTime;
+                        Random random = new Random();
+                        nextTime = random.Next(100, 500);
+                        Thread.Sleep(nextTime);
                         Game.Instance.npc = ChooseNpc();
                         Game.Instance.npc.Show();
-                        startTime = System.Environment.TickCount;
-                        Random random = new Random();
-                        nextTime = random.Next(700, 3500);
-                    }
-                    if (System.Environment.TickCount >= startTime + stayTime && Game.Instance.npc.IsPresent())
-                    {
-                        Game.Instance.HideNpc();
-                        startTime = System.Environment.TickCount;
-                        Random random = new Random();
-                        stayTime = random.Next(820, 1400);
+                        escaped = true;
                     }
                 }
             }, ct);

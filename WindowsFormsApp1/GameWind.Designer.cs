@@ -1,5 +1,7 @@
 ﻿namespace WindowsFormsApp1
 {
+    // clasa data reprezinta forma
+
     partial class canvas
     {
         /// <summary>
@@ -32,11 +34,12 @@
             // 
             // canvas
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(668, 297);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(668, 298);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "canvas";
@@ -45,6 +48,7 @@
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.canvas_Paint);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.canvas_KeyDown);
             this.ResumeLayout(false);
+
         }
 
         #endregion

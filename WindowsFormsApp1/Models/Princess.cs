@@ -9,11 +9,8 @@ namespace WindowsFormsApp1.Models
 {
     class Princess : NPC
     {
-        public Princess(Game game, int x, int y) : base (game)
+        public Princess(int x, int y) : base (x, y, Properties.Resources.princess_prepare)
         {
-            this.img = Properties.Resources.princess_prepare;
-            this.x = x;
-            this.y = y;
             scoreHit = -10;
         }
 
@@ -29,9 +26,9 @@ namespace WindowsFormsApp1.Models
             Debug.WriteLine("Princess is showing");
         }
 
-        public override void isAtacked()
+        public override int isAtacked()
         {
-            game.score = game.score + scoreHit;
+            return scoreHit;
         }
     }
 }

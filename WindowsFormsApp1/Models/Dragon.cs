@@ -9,11 +9,8 @@ namespace WindowsFormsApp1.Models
 {
     class Dragon: NPC
     {
-        public Dragon(Game game, int x, int y) : base(game)
+        public Dragon(int x, int y) : base(x, y, Properties.Resources.dragon)
         {
-            this.img = Properties.Resources.dragon;
-            this.x = x;
-            this.y = y;
             scoreHit = 7;
         }
 
@@ -29,9 +26,9 @@ namespace WindowsFormsApp1.Models
             Debug.WriteLine("Dragon is showing");
         }
 
-        public override void isAtacked()
+        public override int isAtacked()
         {
-            game.score = game.score + scoreHit;
+            return scoreHit;
         }
     }
 }

@@ -8,13 +8,12 @@ using System.Threading.Tasks;
 
 namespace WindowsFormsApp1.Models
 {
-    class NPC : Model
+    public class NPC : Model
     {
         protected int explosionX;
         protected int explosionY;
         protected bool isShowing;
         protected int scoreHit;
-        protected Game game;
 
         public virtual void Hide()
         {
@@ -28,16 +27,23 @@ namespace WindowsFormsApp1.Models
             Debug.WriteLine("NPC is showing");
         }
 
-        public NPC(Game game)
+        public NPC(int x, int y, Bitmap img)
         {
-            this.game = game;
+            if (img != null)
+            {
+                this.img = img;
+                this.rect.Size = this.img.Size;
+            }
+
+            this.rect.X = x;
+            this.rect.Y = y;
             explosionX = Environment.Explosion1X;
             explosionY = Environment.Explosion1Y;
         }
 
         override public void Draw(Graphics g)
         {
-            g.DrawImage(img, x, y);
+            g.DrawImage(img, rect.X, rect.Y);
         }
 
         public bool IsPresent()
@@ -45,9 +51,10 @@ namespace WindowsFormsApp1.Models
             return isShowing;
         }
 
-        public virtual void isAtacked()
+        public virtual int isAtacked()
         {
             Debug.WriteLine("npc is atacked");
+            return 0;
         }
     }
 }

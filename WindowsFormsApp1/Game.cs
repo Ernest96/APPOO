@@ -10,38 +10,63 @@ using Newtonsoft.Json;
 using System.Threading;
 using WindowsFormsApp1.Levels;
 
+// de respectat SOLID!!!
+// DE FOLOSIT INTERFETE
 namespace WindowsFormsApp1
 {
-    class Game
+    // clasa de baza (joaca)
+    public sealed class Game
     {
+        private static readonly object _mutex = new object();
+        private static Game _instance;
         private GraphicEngine graphicEngine;
-        private Mario mario;
-        private NPC npc;
+        //de inchis in nivel 
+        public Mario mario;
+        public NPC npc;
+        ////
         public int score { get; set; }
         public int bestScore { get; private set; }
         public bool keyIsPressed = false;
-        private bool isExplode = false;
+        public bool isExplode;
         public Level currentLevel;
         public int levelIndex { get; private set; }
         private List<Level> Levels;
 
-        public Game()
+        public static Game Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    lock (_mutex)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = new Game();
+                        }
+                    }
+                }
+                return _instance;
+            }
+        }
+
+        private Game()
         {
             Levels = new List<Level>();
-            Levels.Add(new Level1(this));
-            Levels.Add(new Level2(this));
+            Levels.Add(new Level1());
+            Levels.Add(new Level2());
+            Levels.Add(new Level3());
             levelIndex = 0;
             currentLevel = Levels.ElementAt(levelIndex);
-            mario = new Mario(this);
-            npc = new NPC(this);
+            npc = new NPC(0, 0, null);
+            mario = new Mario(currentLevel.marioX, currentLevel.marioY);
             Task.Run(() => getScore());
-            Task.Run(() => logic());
-            Task.Run(() => generate());
+            currentLevel.StartLevel();
         }
 
         public void startGraphics(Graphics g)
         {
-            graphicEngine = new GraphicEngine(g, this);
+            graphicEngine = new GraphicEngine(g);
         }
 
         public void ChangeLevel()
@@ -49,75 +74,11 @@ namespace WindowsFormsApp1
             if (levelIndex < Levels.Count - 1)
                 levelIndex++;
 
+            currentLevel.Stop();
             currentLevel = Levels.ElementAt(levelIndex);
+            currentLevel.StartLevel();
+            mario = new Mario(currentLevel.marioX, currentLevel.marioY);
             isExplode = false;
-            mario = new Mario(this);
-        }
-
-        private void generate()
-        {
-            long startTime = System.Environment.TickCount;
-            long nextTime = 800;
-            long stayTime = 900;
-
-            while (true)
-            {
-                if (System.Environment.TickCount >= startTime + nextTime && !npc.IsPresent())
-                {
-                    ShowNpc();
-                    startTime = System.Environment.TickCount;
-                    Random random = new Random();
-                    nextTime = random.Next(700, 3500);
-                }
-                if (System.Environment.TickCount >= startTime + stayTime && npc.IsPresent())
-                {
-                    HideNpc();
-                    startTime = System.Environment.TickCount;
-                    Random random = new Random();
-                    stayTime = random.Next(820, 1400);
-                }
-            }
-        }
-
-        private void logic()
-        {
-            long startTime = System.Environment.TickCount;
-
-            while (true)
-            {
-                if (keyIsPressed)
-                {
-                    mario.Prepare();
-                    startTime = System.Environment.TickCount;
-                    keyIsPressed = false;
-                }
-
-                if (System.Environment.TickCount >= startTime + 450)
-                {
-                    if (mario.isPreparing)
-                    {
-                        mario.Atack();
-                        if (npc.IsPresent())
-                        {
-                            AtackNpc();
-                            HideNpc();
-                        }
-                        startTime = System.Environment.TickCount;
-                    }
-                    else if (mario.isAtacking)
-                    {
-                        isExplode = false;
-                        this.mario.Stay();
-                        startTime = System.Environment.TickCount;
-                    }
-                }
-            }
-        }
-
-        public void ShowNpc()
-        {
-            npc = currentLevel.ChooseNpc();
-            npc.Show();
         }
 
         public void HideNpc()
@@ -128,9 +89,18 @@ namespace WindowsFormsApp1
         public void AtackNpc()
         {
             isExplode = true;
+            score += npc.isAtacked();
+            CheckScore();
+        }
 
-            npc.isAtacked();
+        public void EscapeNpc()
+        {
+            score += npc.isAtacked();
+            CheckScore();
+        }
 
+        private void CheckScore()
+        {
             if (score > bestScore)
             {
                 bestScore = score;
@@ -140,28 +110,6 @@ namespace WindowsFormsApp1
             if (score >= currentLevel.passPoints)
             {
                 ChangeLevel();
-            }
-
-        }
-
-        public void DrawMario(Graphics g)
-        {
-            mario.Draw(g);
-        }
-
-        public void DrawNpc(Graphics g)
-        {
-            if (npc.IsPresent())
-            {
-                npc.Draw(g);
-            }
-        }
-
-        public void DrawExplosion(Graphics g)
-        {
-            if (isExplode)
-            {
-                g.DrawImage(currentLevel.explodeImg, currentLevel.explosionX, currentLevel.explosionY);
             }
         }
 

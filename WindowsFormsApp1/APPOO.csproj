@@ -31,6 +31,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -60,6 +63,7 @@
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Levels\Level2.cs" />
     <Compile Include="Levels\Level1.cs" />
+    <Compile Include="Levels\Level3.cs" />
     <Compile Include="Models\Dragon.cs" />
     <Compile Include="Models\Mario.cs" />
     <Compile Include="Models\Model.cs" />
@@ -81,7 +85,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="packages.config" />
+    <None Include="app.manifest">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -93,7 +102,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\mario.png" />
@@ -175,6 +186,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\dragon.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\back3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario_jump.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mario_atacked.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\smb_jump-small.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stomp.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

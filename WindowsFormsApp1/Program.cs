@@ -11,6 +11,8 @@ namespace WindowsFormsApp1
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
+        
+        // punctul de intrare in aplicatie
         [STAThread]
         static void Main()
         {
@@ -18,5 +20,7 @@ namespace WindowsFormsApp1
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new canvas());
         }
+
+
     }
 }

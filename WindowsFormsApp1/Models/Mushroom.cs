@@ -9,11 +9,9 @@ namespace WindowsFormsApp1.Models
 {
     class Mushroom : NPC
     {
-        public Mushroom(Game game,int x, int y) : base(game)
+        public Mushroom(int x, int y) : base(x, y, Properties.Resources.mushroom_prepare)
         {
-            this.img = Properties.Resources.mushroom_prepare;
-            this.x = x;
-            this.y = y;
+            
             scoreHit = 2;
         }
 
@@ -29,9 +27,9 @@ namespace WindowsFormsApp1.Models
             Debug.WriteLine("Mushroom is showing");
         }
 
-        public override void isAtacked()
+        public override int isAtacked()
         {
-            game.score = game.score + scoreHit;
+            return scoreHit;
         }
     }
 }
