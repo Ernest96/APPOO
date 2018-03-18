@@ -1,26 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Threading;
-using System.Diagnostics;
+using WindowsFormsApp1.Interfaces;
 
 namespace WindowsFormsApp1
 {
-    class GraphicEngine
+    class GraphicEngine : IDrawable
     { 
         // clasa pentru desenarea elementelor grafice
-
         private Graphics drawHandle;
         private Thread renderThread;
+        private bool isRendering = false;
 
         public GraphicEngine(Graphics g)
         {
             drawHandle = g;
+        }
+
+        public void StartDraw()
+        {
+            if (isRendering)
+                return;
+
+            isRendering = true;
             renderThread = new Thread(new ThreadStart(render));
             renderThread.Start();
+        }
+
+        public void StopDraw()
+        {
+            isRendering = false;
+            renderThread.Abort();
         }
 
         private void render()

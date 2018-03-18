@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using WindowsFormsApp1.Models;
 
 namespace WindowsFormsApp1
@@ -24,12 +19,16 @@ namespace WindowsFormsApp1
         public Bitmap explodeImg;
         protected CancellationTokenSource logicToken;
         protected CancellationTokenSource generateToken;
-
+        protected NPC npc;
+        protected Mario mario;
+        public bool isExplode;
+        public bool keyIsPressed = false;
 
         public Level(int explosionX, int explosionY, int marioX, int marioY)
         {
             NPCS = new List<NPC>();
-
+            npc = new NPC(0, 0, null);
+            mario = new Mario(marioX, marioY);
             explodeImg = Properties.Resources.explode;
             this.explosionX = explosionX;
             this.explosionY = explosionY;
@@ -64,6 +63,7 @@ namespace WindowsFormsApp1
 
         public void Stop()
         {
+            isExplode = false;
             logicToken.Cancel();
             generateToken.Cancel();
         }

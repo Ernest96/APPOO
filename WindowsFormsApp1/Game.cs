@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
-using WindowsFormsApp1.Models;
 using System.IO;
 using Newtonsoft.Json;
-using System.Threading;
 using WindowsFormsApp1.Levels;
+using WindowsFormsApp1.Interfaces;
 
-// de respectat SOLID!!!
-// DE FOLOSIT INTERFETE
 namespace WindowsFormsApp1
 {
     // clasa de baza (joaca)
@@ -19,15 +14,9 @@ namespace WindowsFormsApp1
     {
         private static readonly object _mutex = new object();
         private static Game _instance;
-        private GraphicEngine graphicEngine;
-        //de inchis in nivel 
-        public Mario mario;
-        public NPC npc;
-        ////
+        private IDrawable graphicEngine;
         public int score { get; set; }
         public int bestScore { get; private set; }
-        public bool keyIsPressed = false;
-        public bool isExplode;
         public Level currentLevel;
         public int levelIndex { get; private set; }
         private List<Level> Levels;
@@ -58,15 +47,19 @@ namespace WindowsFormsApp1
             Levels.Add(new Level3());
             levelIndex = 0;
             currentLevel = Levels.ElementAt(levelIndex);
-            npc = new NPC(0, 0, null);
-            mario = new Mario(currentLevel.marioX, currentLevel.marioY);
-            Task.Run(() => getScore());
             currentLevel.StartLevel();
+            Task.Run(() => getScore());
         }
 
         public void startGraphics(Graphics g)
         {
             graphicEngine = new GraphicEngine(g);
+            graphicEngine.StartDraw();
+        }
+
+        public void stopGraphics()
+        {
+            graphicEngine.StopDraw();
         }
 
         public void ChangeLevel()
@@ -77,30 +70,12 @@ namespace WindowsFormsApp1
             currentLevel.Stop();
             currentLevel = Levels.ElementAt(levelIndex);
             currentLevel.StartLevel();
-            mario = new Mario(currentLevel.marioX, currentLevel.marioY);
-            isExplode = false;
         }
 
-        public void HideNpc()
+        public void ChangeScore(int scoreAdd)
         {
-            npc.Hide();
-        }
+            score += scoreAdd;
 
-        public void AtackNpc()
-        {
-            isExplode = true;
-            score += npc.isAtacked();
-            CheckScore();
-        }
-
-        public void EscapeNpc()
-        {
-            score += npc.isAtacked();
-            CheckScore();
-        }
-
-        private void CheckScore()
-        {
             if (score > bestScore)
             {
                 bestScore = score;

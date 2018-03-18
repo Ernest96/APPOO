@@ -12,7 +12,6 @@ namespace WindowsFormsApp1.Levels
     class Level3 : Level
     {
         private bool escaped = true;
-
         public Level3() :
             base(Environment.Explosion1X, Environment.Explosion1Y, Environment.Mario3X, Environment.Mario3Y)
         {
@@ -27,12 +26,12 @@ namespace WindowsFormsApp1.Levels
         {
             Bitmap back = Game.Instance.currentLevel.background;
             g.DrawImage(back, 0, 0, back.Width, back.Height);
-            Game.Instance.mario.Draw(g);
-            if (Game.Instance.npc.IsPresent())
+            mario.Draw(g);
+            if (npc.IsPresent())
             {
-                Game.Instance.npc.Draw(g);
+                npc.Draw(g);
             }
-            if (Game.Instance.isExplode)
+            if (isExplode)
             {
                 g.DrawImage(Game.Instance.currentLevel.explodeImg, Game.Instance.currentLevel.explosionX, Game.Instance.currentLevel.explosionY);
             }
@@ -59,29 +58,29 @@ namespace WindowsFormsApp1.Levels
                         break;
                     }
 
-                    if (Game.Instance.keyIsPressed && !Game.Instance.mario.isJumping)
+                    if (keyIsPressed && !mario.isJumping)
                     {
-                        Game.Instance.mario.Jump(70);
+                        mario.Jump(70);
                         startTime = System.Environment.TickCount;
-                        Game.Instance.keyIsPressed = false;
+                        keyIsPressed = false;
                     }
 
                     if (System.Environment.TickCount >= startTime + 350)
                     {
-                        if (Game.Instance.mario.isJumping)
+                        if (mario.isJumping)
                         {
-                            Game.Instance.mario.Fall();
+                            mario.Fall();
                         }
-                        else if (Game.Instance.mario.isAtacked)
+                        else if (mario.isAtacked)
                         {
-                            Game.Instance.mario.Fall();
+                            mario.Fall();
                         }
                     }
 
-                    if (Game.Instance.npc.rect.IntersectsWith(Game.Instance.mario.rect) && !Game.Instance.mario.isAtacked)
+                    if (npc.rect.IntersectsWith(mario.rect) && !mario.isAtacked)
                     {
                         escaped = false;
-                        Game.Instance.mario.Atacked();
+                        mario.Atacked();
                         Thread.Sleep(500);
                     }
                 }
@@ -95,8 +94,8 @@ namespace WindowsFormsApp1.Levels
             long moveTime = 40;
             Thread.Sleep(100);
 
-            Game.Instance.npc = ChooseNpc();
-            Game.Instance.npc.Show();
+            npc = ChooseNpc();
+            npc.Show();
 
             Task.Factory.StartNew(() =>
             {
@@ -110,26 +109,31 @@ namespace WindowsFormsApp1.Levels
 
                     if (System.Environment.TickCount >= startTime + moveTime)
                     {
-                        Game.Instance.npc.rect.X -= 30;
+                        npc.rect.X -= 30;
                         startTime = System.Environment.TickCount;
                     }
-                    if (Game.Instance.npc.rect.Right < 0)
+                    if (npc.rect.Right < 0)
                     {
                         if (escaped == true)
                         {
-                            Game.Instance.EscapeNpc();
+                            EscapeNpc();
                         }
 
                         int nextTime;
                         Random random = new Random();
                         nextTime = random.Next(100, 500);
                         Thread.Sleep(nextTime);
-                        Game.Instance.npc = ChooseNpc();
-                        Game.Instance.npc.Show();
+                        npc = ChooseNpc();
+                        npc.Show();
                         escaped = true;
                     }
                 }
             }, ct);
+        }
+
+        public void EscapeNpc()
+        {
+            Game.Instance.ChangeScore(npc.isAtacked());
         }
 
         public override void StartLevel()

@@ -60,6 +60,7 @@
       <DependentUpon>GameWind.cs</DependentUpon>
     </Compile>
     <Compile Include="GraphicEngine.cs" />
+    <Compile Include="Interfaces\IDrawable.cs" />
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Levels\Level2.cs" />
     <Compile Include="Levels\Level1.cs" />

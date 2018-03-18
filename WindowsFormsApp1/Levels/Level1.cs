@@ -1,27 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using WindowsFormsApp1.Models;
 
 namespace WindowsFormsApp1.Levels
 {
-
     //nivelul 1
-
     class Level1 : Level
     {
-
         public Level1() :
             base(Environment.Explosion1X, Environment.Explosion1Y, Environment.Mario1X, Environment.Mario1Y)
         {
             logicToken = new CancellationTokenSource();
             generateToken = new CancellationTokenSource();
             background = Properties.Resources.back;
-            passPoints = 2;
+            passPoints = 4;
             NPCS.Add(new Princess(Environment.Princess1X, Environment.Princess1Y));
             NPCS.Add(new Mushroom(Environment.Mushroom1X, Environment.Mushroom1Y));
         }
@@ -41,12 +36,12 @@ namespace WindowsFormsApp1.Levels
         {
             Bitmap back = Game.Instance.currentLevel.background;
             g.DrawImage(back, 0, 0, back.Width, back.Height);
-            Game.Instance.mario.Draw(g);
-            if (Game.Instance.npc.IsPresent())
+            mario.Draw(g);
+            if (npc.IsPresent())
             {
-                Game.Instance.npc.Draw(g);
+                npc.Draw(g);
             }
-            if (Game.Instance.isExplode)
+            if (isExplode)
             {
                 g.DrawImage(Game.Instance.currentLevel.explodeImg, Game.Instance.currentLevel.explosionX, Game.Instance.currentLevel.explosionY);
             }
@@ -68,29 +63,29 @@ namespace WindowsFormsApp1.Levels
                        break;
                    }
 
-                   if (Game.Instance.keyIsPressed)
+                   if (keyIsPressed)
                    {
-                       Game.Instance.mario.Prepare();
+                       mario.Prepare();
                        startTime = System.Environment.TickCount;
-                       Game.Instance.keyIsPressed = false;
+                       keyIsPressed = false;
                    }
 
                    if (System.Environment.TickCount >= startTime + 450)
                    {
-                       if (Game.Instance.mario.isPreparing)
+                       if (mario.isPreparing)
                        {
-                           Game.Instance.mario.Atack();
-                           if (Game.Instance.npc.IsPresent())
+                           mario.Atack();
+                           if (npc.IsPresent())
                            {
-                               Game.Instance.AtackNpc();
-                               Game.Instance.HideNpc();
+                               AtackNpc();
+                               npc.Hide();
                            }
                            startTime = System.Environment.TickCount;
                        }
-                       else if (Game.Instance.mario.isAtacking)
+                       else if (mario.isAtacking)
                        {
-                           Game.Instance.isExplode = false;
-                           Game.Instance.mario.Stay();
+                           isExplode = false;
+                           mario.Stay();
                            startTime = System.Environment.TickCount;
                        }
                    }
@@ -115,23 +110,29 @@ namespace WindowsFormsApp1.Levels
                         break;
                     }
 
-                    if (System.Environment.TickCount >= startTime + nextTime && !Game.Instance.npc.IsPresent())
+                    if (System.Environment.TickCount >= startTime + nextTime && !npc.IsPresent())
                     {
-                        Game.Instance.npc = ChooseNpc();
-                        Game.Instance.npc.Show();
+                        npc = ChooseNpc();
+                        npc.Show();
                         startTime = System.Environment.TickCount;
                         Random random = new Random();
                         nextTime = random.Next(700, 3500);
                     }
-                    if (System.Environment.TickCount >= startTime + stayTime && Game.Instance.npc.IsPresent())
+                    if (System.Environment.TickCount >= startTime + stayTime && npc.IsPresent())
                     {
-                        Game.Instance.HideNpc();
+                        npc.Hide();
                         startTime = System.Environment.TickCount;
                         Random random = new Random();
                         stayTime = random.Next(820, 1400);
                     }
                 }
             }, ct);
+        }
+
+        public void AtackNpc()
+        {
+            isExplode = true;
+            Game.Instance.ChangeScore(npc.isAtacked());
         }
 
         public override void StartLevel()
