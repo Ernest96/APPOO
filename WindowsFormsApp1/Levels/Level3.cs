@@ -31,10 +31,6 @@ namespace WindowsFormsApp1.Levels
             {
                 npc.Draw(g);
             }
-            if (isExplode)
-            {
-                g.DrawImage(Game.Instance.currentLevel.explodeImg, Game.Instance.currentLevel.explosionX, Game.Instance.currentLevel.explosionY);
-            }
         }
 
         public override NPC ChooseNpc()

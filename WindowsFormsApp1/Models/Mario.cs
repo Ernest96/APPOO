@@ -18,6 +18,10 @@ namespace WindowsFormsApp1.Models
         override public void Draw(Graphics g)
         {
             g.DrawImage(img, rect.X, rect.Y);
+            if (isAtacked)
+            {
+                g.DrawImage(Properties.Resources.explode, rect.X, rect.Y + rect.Height / 2);
+            }
         }
 
         public Mario(int x, int y)
